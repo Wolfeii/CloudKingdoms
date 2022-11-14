@@ -1,0 +1,17 @@
+database:
+  # For local database, use "SQLite".
+  # For remote database, use "MySQL" or "MariaDB" (Depends on your setup).
+  type: SQLite
+  # Whether the datastore folder should be back-up on startup.
+  backup: true
+  # Remote database information
+  address: 'localhost'
+  port: 3306
+  db-name: 'CloudKingdoms'
+  user-name: 'root'
+  password: 'root'
+  prefix: ''
+  useSSL: false
+  allowPublicKeyRetrieval: true
+  waitTimeout: 600000
+  maxLifetime: 1800000

@@ -1,0 +1,8 @@
+name: CloudKingdoms
+version: '${project.version}'
+main: se.deepcloud.cloudkingdoms.CloudKingdoms
+api-version: 1.19
+softdepend: [ PlaceholderAPI, Vault ]
+authors: [ Wolfeiii ]
+description: Kingdoms Plugin för DeepCloud.
+website: https://deepcloud.se/
