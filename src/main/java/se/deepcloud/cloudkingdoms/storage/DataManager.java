@@ -118,6 +118,7 @@ public class DataManager {
         long startTime = System.currentTimeMillis();
 
         KingdomsDeserializer.deserializeMembers(kingdomsLoader, databaseCache);
+        KingdomsDeserializer.deserializeClaims(kingdomsLoader, databaseCache);
 
         kingdomsLoader.loadAllObjects("kingdoms", resultSetRaw -> {
             DatabaseResult databaseResult = new DatabaseResult(resultSetRaw);

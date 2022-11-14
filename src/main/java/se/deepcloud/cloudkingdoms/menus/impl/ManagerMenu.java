@@ -4,17 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
 import se.deepcloud.cloudkingdoms.menus.KingdomMenu;
-import se.deepcloud.cloudkingdoms.menus.items.CommonMenuItems;
+import se.deepcloud.cloudkingdoms.menus.items.MenuItems;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
 import se.deepcloud.cloudkingdoms.utilities.itemstack.ItemBuilder;
 import se.deepcloud.cloudkingdoms.utilities.itemstack.TemplateItem;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class ManagerMenu extends KingdomMenu {
@@ -29,21 +27,21 @@ public final class ManagerMenu extends KingdomMenu {
         }
 
         for (int backgroundIndex = 0; backgroundIndex < inventory.getSize(); backgroundIndex++) {
-            inventory.setItem(backgroundIndex, CommonMenuItems.SEPERATOR.build());
+            inventory.setItem(backgroundIndex, MenuItems.SEPERATOR.build());
         }
 
         String homeAvailableLine = "&7Hem satt? " + (kingdom.getHomeLocation() != null ? "&a&lJA" : "&c&lNEJ");
-        inventory.setItem(10, CommonMenuItems.MANAGER_HOME.getBuilder()
+        inventory.setItem(10, MenuItems.MANAGER_HOME.getBuilder()
                 .appendLore(List.of(homeAvailableLine))
                 .build());
-        inventory.setItem(11, CommonMenuItems.MANAGER_MEMBERS.build());
-        inventory.setItem(12, CommonMenuItems.MANAGER_BANS.build());
-        inventory.setItem(13, CommonMenuItems.MANAGER_BANK.build());
-        inventory.setItem(14, CommonMenuItems.MANAGER_UPGRADES.build());
-        inventory.setItem(15, CommonMenuItems.MANAGER_PERMISSIONS.build());
-        inventory.setItem(16, CommonMenuItems.MANAGER_LOGS.build());
-        inventory.setItem(30, CommonMenuItems.MANAGER_VAULT.build());
-        inventory.setItem(32, CommonMenuItems.MANAGER_LEVEL.build());
+        inventory.setItem(11, MenuItems.MANAGER_MEMBERS.build());
+        inventory.setItem(12, MenuItems.MANAGER_BANS.build());
+        inventory.setItem(13, MenuItems.MANAGER_BANK.build());
+        inventory.setItem(14, MenuItems.MANAGER_UPGRADES.build());
+        inventory.setItem(15, MenuItems.MANAGER_PERMISSIONS.build());
+        inventory.setItem(16, MenuItems.MANAGER_LOGS.build());
+        inventory.setItem(30, MenuItems.MANAGER_VAULT.build());
+        inventory.setItem(32, MenuItems.MANAGER_LEVEL.build());
 
         inventory.setItem(48, new TemplateItem(new ItemBuilder(Material.PAPER)
                 .withName("&eKingdom Sammanfattning")

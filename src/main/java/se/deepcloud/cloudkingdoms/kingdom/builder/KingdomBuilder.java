@@ -1,11 +1,13 @@
 package se.deepcloud.cloudkingdoms.kingdom.builder;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
+import se.deepcloud.cloudkingdoms.kingdom.chunk.DataChunk;
 import se.deepcloud.cloudkingdoms.kingdom.name.KingdomName;
 import se.deepcloud.cloudkingdoms.kingdom.privilege.KingdomPrivilege;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
@@ -26,6 +28,7 @@ public class KingdomBuilder {
     public long creationTime = System.currentTimeMillis() / 1000;
     public final List<KingdomPlayer> members = new LinkedList<>();
     public final List<KingdomPlayer> bannedPlayers = new LinkedList<>();
+    public final List<Chunk> claims = new LinkedList<>();
     public final Map<KingdomRole, Map<KingdomPrivilege, KingdomPrivilege.Status>> rolePermissions = new LinkedHashMap<>();
     public BigDecimal balance = BigDecimal.ZERO;
 
@@ -84,6 +87,11 @@ public class KingdomBuilder {
 
     public KingdomBuilder addKingdomMember(@NotNull KingdomPlayer member) {
         this.members.add(member);
+        return this;
+    }
+
+    public KingdomBuilder addClaim(@NotNull Chunk chunk) {
+        this.claims.add(chunk);
         return this;
     }
 

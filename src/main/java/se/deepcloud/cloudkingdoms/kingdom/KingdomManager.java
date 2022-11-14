@@ -1,5 +1,6 @@
 package se.deepcloud.cloudkingdoms.kingdom;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
@@ -76,6 +77,12 @@ public class KingdomManager {
         BukkitExecutor.sync(() -> Message.CREATE_KINGDOM.send(kingdomBuilder.owner), 1L);
 
         return kingdom;
+    }
+
+    public boolean isChunkClaimed(@NotNull Chunk chunk) {
+        return kingdomsByUUID.values()
+                .stream()
+                .anyMatch(kingdom -> kingdom.getClaims().contains(chunk));
     }
 
     private UUID generateKingdomUUID() {

@@ -76,6 +76,7 @@ public class Kingdom {
             members.addAll(kingdomBuilder.members);
             members.forEach(member -> member.setKingdom(this));
         });
+        this.claims.addAll(kingdomBuilder.claims);
         this.bannedPlayers.addAll(kingdomBuilder.members);
         this.rolePermissions.putAll(kingdomBuilder.rolePermissions);
 

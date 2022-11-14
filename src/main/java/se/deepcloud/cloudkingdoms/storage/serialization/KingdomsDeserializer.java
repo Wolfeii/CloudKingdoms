@@ -3,6 +3,7 @@ package se.deepcloud.cloudkingdoms.storage.serialization;
 import org.jetbrains.annotations.NotNull;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.builder.KingdomBuilder;
+import se.deepcloud.cloudkingdoms.kingdom.chunk.DataChunk;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRoles;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
@@ -43,6 +44,31 @@ public class KingdomsDeserializer {
             kingdomPlayer.setKingdomRole(kingdomRole);
 
             kingdomBuilder.addKingdomMember(kingdomPlayer);
+        });
+    }
+
+    public static void deserializeClaims(@NotNull DatabaseBridge databaseBridge, @NotNull DatabaseCache<KingdomBuilder> databaseCache) {
+        databaseBridge.loadAllObjects("kingdom_claims", claimsRow -> {
+            DatabaseResult databaseResult = new DatabaseResult(claimsRow);
+
+            Optional<UUID> uuid = databaseResult.getUUID("uuid");
+            if (uuid.isEmpty()) {
+                Log.warn("Kan inte ladda claims för Kingdom med ogiltligt UUID.");
+                return;
+            }
+
+            Optional<String> worldName = databaseResult.getString("world_name");
+            Optional<Integer> xCoordinate = databaseResult.getInt("chunk_x_pos");
+            Optional<Integer> zCoordinate = databaseResult.getInt("chunk_z_pos");
+
+            if (worldName.isEmpty() || xCoordinate.isEmpty() || zCoordinate.isEmpty()) {
+                Log.warn("Kan inte ladda Claim med ogiltiga koordinater.");
+                return;
+            }
+
+            KingdomBuilder kingdomBuilder = databaseCache.computeIfAbsentInfo(uuid.get(), KingdomBuilder::new);
+
+            kingdomBuilder.addClaim(new DataChunk(uuid.get(), worldName.get(), xCoordinate.get(), zCoordinate.get()));
         });
     }
 }

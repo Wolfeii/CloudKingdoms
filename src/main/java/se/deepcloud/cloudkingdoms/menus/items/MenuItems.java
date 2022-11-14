@@ -1,11 +1,10 @@
 package se.deepcloud.cloudkingdoms.menus.items;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import se.deepcloud.cloudkingdoms.utilities.itemstack.ItemBuilder;
 import se.deepcloud.cloudkingdoms.utilities.itemstack.TemplateItem;
 
-public class CommonMenuItems {
+public class MenuItems {
 
     public static final TemplateItem SEPERATOR = new TemplateItem(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
             .withName("&7DeepCloud"));
@@ -70,6 +69,14 @@ public class CommonMenuItems {
     public static final TemplateItem MANAGER_LEVEL = new TemplateItem(new ItemBuilder(Material.EXPERIENCE_BOTTLE)
             .withName("&aKingdom Level")
             .withLore("&7Köp levlar för ditt", "&7Kingdom och lås upp spawners &", "&7rank högre på topplistan."));
+
+    public static final TemplateItem BANK_DEPOSIT = new TemplateItem(new ItemBuilder(Material.FURNACE_MINECART)
+            .withName("&aInsättning")
+            .withLore("&7Överför pengar från ditt", "&7personaliga konto till Kingdom", ""));
+
+    public static final TemplateItem BANK_TRANSACTIONS = new TemplateItem(new ItemBuilder(Material.FURNACE_MINECART)
+            .withName("&aInsättning")
+            .withLore("&7Överför pengar från ditt", "&7personaliga konto till Kingdom", ""));
 
     /*
         static {

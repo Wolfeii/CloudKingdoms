@@ -27,10 +27,10 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
 
     @Override
     protected void handlePostInitialize() {
-        SQLHelper.createIndex("kingdoms_bans_index", "kingdoms_bans",
+        SQLHelper.createIndex("kingdoms_bans_index", "kingdom_bans",
                 "kingdom", "player");
 
-        SQLHelper.createIndex("kingdoms_members_index", "kingdoms_members",
+        SQLHelper.createIndex("kingdoms_members_index", "kingdom_members",
                 "kingdom", "player");
 
         SQLHelper.createIndex("role_permissions_index", "kingdoms_role_permissions",
@@ -76,6 +76,12 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                 new Pair<>("level", "INTEGER"),
                 new Pair<>("name", "TEXT")
         );
+
+        SQLHelper.createTable("kingdom_claims",
+                new Pair<>("uuid", "UUID"),
+                new Pair<>("world_name", "TEXT"),
+                new Pair<>("chunk_x_pos", "INTEGER"),
+                new Pair<>("chunk_y_pos", "INTEGER"));
 
         SQLHelper.createTable("kingdoms_banks",
                 new Pair<>("kingdom", "UUID PRIMARY KEY"),

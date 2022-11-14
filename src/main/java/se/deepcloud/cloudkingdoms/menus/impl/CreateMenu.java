@@ -8,9 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
 import se.deepcloud.cloudkingdoms.kingdom.name.KingdomName;
-import se.deepcloud.cloudkingdoms.listeners.PlayersListener;
 import se.deepcloud.cloudkingdoms.menus.KingdomMenu;
-import se.deepcloud.cloudkingdoms.menus.items.CommonMenuItems;
+import se.deepcloud.cloudkingdoms.menus.items.MenuItems;
 import se.deepcloud.cloudkingdoms.message.Message;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
 import se.deepcloud.cloudkingdoms.player.chat.PlayerChat;
@@ -25,11 +24,11 @@ public final class CreateMenu extends KingdomMenu {
         super(player, kingdom);
 
         for (int backgroundIndex = 0; backgroundIndex < inventory.getSize(); backgroundIndex++) {
-            this.inventory.setItem(backgroundIndex, CommonMenuItems.SEPERATOR.build());
+            this.inventory.setItem(backgroundIndex, MenuItems.SEPERATOR.build());
         }
 
-        this.inventory.setItem(12, CommonMenuItems.CREATE_CREATE.build());
-        this.inventory.setItem(14, CommonMenuItems.CREATE_INFO.build());
+        this.inventory.setItem(12, MenuItems.CREATE_CREATE.build());
+        this.inventory.setItem(14, MenuItems.CREATE_INFO.build());
     }
 
     @Override
