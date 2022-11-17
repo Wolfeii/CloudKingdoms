@@ -13,7 +13,7 @@ public final class LevelMenu extends KingdomMenu {
 
     private final Inventory inventory = Bukkit.createInventory(this, 36, "Kingdom Level");
 
-    protected LevelMenu(@NotNull KingdomPlayer kingdomPlayer, @Nullable Kingdom kingdom) {
+    public LevelMenu(@NotNull KingdomPlayer kingdomPlayer, @Nullable Kingdom kingdom) {
         super(kingdomPlayer, kingdom);
     }
 

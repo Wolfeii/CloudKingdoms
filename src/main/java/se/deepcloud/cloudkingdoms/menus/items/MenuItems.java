@@ -78,6 +78,14 @@ public class MenuItems {
             .withName("&aInsättning")
             .withLore("&7Överför pengar från ditt", "&7personaliga konto till Kingdom", ""));
 
+    public static final TemplateItem BANK_WITHDRAW = new TemplateItem(new ItemBuilder(Material.MINECART)
+            .withName("&cUttagning")
+            .withLore("&7Överför pengar ditt", "&7Kingdoms konto till dig själv", ""));
+
+    public static final TemplateItem BANK_DEPOSIT_ALL = new TemplateItem(new ItemBuilder(Material.EMERALD_BLOCK)
+            .withName("&aLägg in hela saldot")
+            .withLore("&7Överför alla pengar från", "&7ditt personliga konto till ditt", "&7Kingdoms konto.", ""));
+
     /*
         static {
             separator = Material.GRAY_STAINED_GLASS_PANE, med namn: "&7DeepCloud").build();

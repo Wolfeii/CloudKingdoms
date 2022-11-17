@@ -43,8 +43,6 @@ public interface IKingdomCommand {
      */
     int getMaxArgs();
 
-    Pair<Integer, String> getCooldowns();
-
     /**
      * Can the command be executed from console?
      * If true, sender cannot be casted directly into a player. Otherwise, it can be.

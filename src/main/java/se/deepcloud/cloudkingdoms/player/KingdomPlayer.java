@@ -131,7 +131,7 @@ public final class KingdomPlayer {
         return location == null ? null : location.getWorld();
     }
 
-    public @Nullable Location getLocation() {
+    public Location getLocation() {
         Player player = asPlayer();
         return player == null ? null : player.getLocation();
     }

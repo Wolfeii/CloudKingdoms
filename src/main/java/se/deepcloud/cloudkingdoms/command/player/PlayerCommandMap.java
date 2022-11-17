@@ -12,7 +12,7 @@ public class PlayerCommandMap extends CommandMap {
 
     @Override
     public void loadDefaultCommands() {
-
+        registerCommand(new CommandClaim(), true);
     }
 
 }

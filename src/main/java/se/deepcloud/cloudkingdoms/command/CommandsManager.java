@@ -1,6 +1,7 @@
 package se.deepcloud.cloudkingdoms.command;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
+import se.deepcloud.cloudkingdoms.kingdom.claim.ClaimPosition;
 import se.deepcloud.cloudkingdoms.menus.impl.CreateMenu;
 import se.deepcloud.cloudkingdoms.menus.impl.ManagerMenu;
 import se.deepcloud.cloudkingdoms.message.Message;
@@ -24,8 +26,6 @@ import java.util.*;
 
 public class CommandsManager {
 
-    private static final String KINGDOMS_COMMAND = "kingdom";
-
     private final Map<UUID, Map<String, Long>> commandsCooldown = new HashMap<>();
 
     private final CloudKingdoms plugin;
@@ -34,6 +34,7 @@ public class CommandsManager {
 
     private Set<Runnable> pendingCommands = new HashSet<>();
 
+    private ClaimCommand claimCommand;
     private PluginCommand pluginCommand;
     private String label = null;
 
@@ -44,16 +45,10 @@ public class CommandsManager {
     }
 
     public void loadData() {
-        label = KINGDOMS_COMMAND.split(",")[0];
+        claimCommand = new ClaimCommand("chunk");
+        pluginCommand = new PluginCommand("kingdom");
 
-        pluginCommand = new PluginCommand(label);
-
-        String[] commandSections = KINGDOMS_COMMAND.split(",");
-
-        if (commandSections.length > 1) {
-            pluginCommand.setAliases(Arrays.asList(Arrays.copyOfRange(commandSections, 1, commandSections.length)));
-        }
-
+        ((CraftServer) plugin.getServer()).getCommandMap().register("cloudkingdoms", claimCommand);
         ((CraftServer) plugin.getServer()).getCommandMap().register("cloudkingdoms", pluginCommand);
 
         playerCommandsMap.loadDefaultCommands();
@@ -70,13 +65,13 @@ public class CommandsManager {
         registerCommand(kingdomCommand, true);
     }
 
-    public void unregisterCommand(IKingdomCommand superiorCommand) {
-        playerCommandsMap.unregisterCommand(superiorCommand);
+    public void unregisterCommand(IKingdomCommand kingdomCommand) {
+        playerCommandsMap.unregisterCommand(kingdomCommand);
     }
 
-    public void registerAdminCommand(IKingdomCommand superiorCommand) {
+    public void registerAdminCommand(IKingdomCommand kingdomCommand) {
         if (pendingCommands != null) {
-            pendingCommands.add(() -> registerAdminCommand(superiorCommand));
+            pendingCommands.add(() -> registerAdminCommand(kingdomCommand));
             return;
         }
 
@@ -139,6 +134,52 @@ public class CommandsManager {
         playerCommandsMap.registerCommand(kingdomCommand, sort);
     }
 
+    private class ClaimCommand extends BukkitCommand {
+
+        ClaimCommand(String claimCommandLabel) {
+            super(claimCommandLabel);
+        }
+
+        @Override
+        public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+            if (sender instanceof Player) {
+                KingdomPlayer kingdomPlayer = plugin.getPlayerManager().getKingdomPlayer(sender);
+
+                if (kingdomPlayer != null) {
+                    Location location = kingdomPlayer.getLocation();
+                    if (location != null) {
+                        ClaimPosition claimPosition = plugin.getKingdomManager().getClaimData(location.getChunk());
+
+                        sendClaimInformation(kingdomPlayer, claimPosition);
+                    }
+                }
+            }
+
+            Message.NO_COMMAND_PERMISSION.send(sender);
+
+            return false;
+        }
+
+        public void sendClaimInformation(@NotNull KingdomPlayer kingdomPlayer, @NotNull ClaimPosition claimPosition) {
+            Kingdom owner = claimPosition.getOwner();
+
+            kingdomPlayer.runIfOnline(player -> {
+                Message.CUSTOM.send(kingdomPlayer, "&8&m+----------------**----------------+", true);
+                Message.CUSTOM.send(kingdomPlayer, "&{HEX:c97f10}&lCHUNK INFORMATION", true);
+                Message.CUSTOM.send(kingdomPlayer, "&7X: " + (claimPosition.getX() * 16) + " Y: " + (player.getLocation().getBlockY()) + " Z: " + (claimPosition.getZ() * 16), true);
+                Message.CUSTOM.send(kingdomPlayer, " ", true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Kingdom: &f" + (owner == null ? "Inget" : owner.getName()), true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Bank Saldo: &a$" + /* TODO: kingdom.getBankBalance() */ 0, true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Claims: &7" + (owner == null ? 0 : owner.getClaimsSize()) + "/" + (owner == null ? 0 : owner.getClaimBonus() + 5), true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Medlemmar: &7" + (owner == null ? 0 : owner.getKingdomMemberSize()) + "/" + (owner == null ? 0 : owner.getMemberBonus() + 5), true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Ägare: &c" + (owner == null ? "Okänd" : owner.getOwner().getName()), true);
+                Message.CUSTOM.send(kingdomPlayer, " &{HEX:fce803}Level: &6" + (owner == null ? 0 : owner.getLevel()), true);
+                Message.CUSTOM.send(kingdomPlayer, " ", true);
+                Message.CUSTOM.send(kingdomPlayer, "&8&m+----------------**----------------+", true);
+            });
+        }
+    }
+
     private class PluginCommand extends BukkitCommand {
 
         PluginCommand(String islandCommandLabel) {
@@ -146,7 +187,7 @@ public class CommandsManager {
         }
 
         @Override
-        public boolean execute(CommandSender sender, String label, String[] args) {
+        public boolean execute(@NotNull CommandSender sender, @NotNull String label, String[] args) {
             if (args.length > 0) {
                 Log.debug(Debug.EXECUTE_COMMAND, "CommandsManager#PluginCommand", "execute",
                         sender.getName(), args[0]);
@@ -257,7 +298,7 @@ public class CommandsManager {
 
     @Nullable
     private Pair<Integer, String> getCooldown(@NotNull IKingdomCommand command) {
-        return command.getCooldowns();
+        return null;
     }
 
 }

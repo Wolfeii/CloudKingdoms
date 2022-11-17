@@ -79,9 +79,11 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
 
         SQLHelper.createTable("kingdom_claims",
                 new Pair<>("uuid", "UUID"),
+                new Pair<>("claimed_by", "UUID"),
                 new Pair<>("world_name", "TEXT"),
                 new Pair<>("chunk_x_pos", "INTEGER"),
-                new Pair<>("chunk_y_pos", "INTEGER"));
+                new Pair<>("chunk_z_pos", "INTEGER"),
+                new Pair<>("claimed_on", "BIGINT"));
 
         SQLHelper.createTable("kingdoms_banks",
                 new Pair<>("kingdom", "UUID PRIMARY KEY"),
@@ -158,7 +160,6 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
         // Up to 1.9.0.574, decimals would not be saved correctly in MySQL
         // This occurred because the field type was DECIMAL(10,0) instead of DECIMAL(10,2)
         // Updating the column types to "DECIMAL" again should fix the issue.
-        // https://github.com/BG-Software-LLC/SuperiorSkyblock2/issues/1021
         SQLHelper.modifyColumnType("kingdoms_upgrades", "crop_growth_multiplier", "DECIMAL");
         SQLHelper.modifyColumnType("kingdoms_upgrades", "spawner_rates_multiplier", "DECIMAL");
         SQLHelper.modifyColumnType("kingdoms_upgrades", "mob_drops_multiplier", "DECIMAL");

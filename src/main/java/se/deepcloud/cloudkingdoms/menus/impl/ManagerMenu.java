@@ -30,9 +30,8 @@ public final class ManagerMenu extends KingdomMenu {
             inventory.setItem(backgroundIndex, MenuItems.SEPERATOR.build());
         }
 
-        String homeAvailableLine = "&7Hem satt? " + (kingdom.getHomeLocation() != null ? "&a&lJA" : "&c&lNEJ");
         inventory.setItem(10, MenuItems.MANAGER_HOME.getBuilder()
-                .appendLore(List.of(homeAvailableLine))
+                .appendLore(List.of("&7Hem satt? " + (kingdom.getHomeLocation() != null ? "&a&lJA" : "&c&lNEJ")))
                 .build());
         inventory.setItem(11, MenuItems.MANAGER_MEMBERS.build());
         inventory.setItem(12, MenuItems.MANAGER_BANS.build());
@@ -51,7 +50,7 @@ public final class ManagerMenu extends KingdomMenu {
                         "&f➞ " + kingdom.getKingdomMembers(true).size() * 5 + " &7standard slots + &f" + kingdom.getClaimBonus() + " &7slots", "&7från boosts.", "",
                         "&cHopper Gräns: &f" + /* UpgradeType.HOPPERS.getValue(kingdom.getUpgrades().getLevel(UpgradeType.HOPPERS)) */ "0" + " &e(" + /* kingdom.getHopperPlaced() */ "0" + " placerade)",
                         "&cSpawner Gräns: &f" + /* UpgradeType.SPAWNERS.getValue(kingdom.getUpgrades().getLevel(UpgradeType.SPAWNERS)) */ "0" + " &e(" + /* kingdom.getSpawnerPlaced() */ "0" + " placerade)", "",
-                        "&aBank Saldo: &2$0", "", "&eÖka dina max claims och", "&emedlemmar genom uppgradering", "&eav din rank @ &f&ndeepcloud.tebex.io")).build());
+                        "&aBank Saldo: &2$0", "", "&eÖka dina max claims och", "&emedlemmar genom uppgradering", "&eav din rank @ &f&nbutik.deepcloud.se")).build());
 
     }
 

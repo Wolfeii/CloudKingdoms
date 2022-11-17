@@ -35,10 +35,10 @@ public abstract class CommandMap {
         }
 
         if (sort) {
-            List<IKingdomCommand> superiorCommands = new LinkedList<>(subCommands.values());
-            superiorCommands.sort(Comparator.comparing(o -> o.getAliases().get(0)));
+            List<IKingdomCommand> kingdomCommands = new LinkedList<>(subCommands.values());
+            kingdomCommands.sort(Comparator.comparing(o -> o.getAliases().get(0)));
             subCommands.clear();
-            superiorCommands.forEach(s -> subCommands.put(s.getAliases().get(0), s));
+            kingdomCommands.forEach(s -> subCommands.put(s.getAliases().get(0), s));
         }
     }
 

@@ -1,9 +1,11 @@
 package se.deepcloud.cloudkingdoms.storage.serialization;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.builder.KingdomBuilder;
-import se.deepcloud.cloudkingdoms.kingdom.chunk.DataChunk;
+import se.deepcloud.cloudkingdoms.kingdom.claim.ClaimPosition;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRoles;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
@@ -66,9 +68,20 @@ public class KingdomsDeserializer {
                 return;
             }
 
+            World world = Bukkit.getWorld(worldName.get());
+            if (world == null) {
+                return;
+            }
+
             KingdomBuilder kingdomBuilder = databaseCache.computeIfAbsentInfo(uuid.get(), KingdomBuilder::new);
 
-            kingdomBuilder.addClaim(new DataChunk(uuid.get(), worldName.get(), xCoordinate.get(), zCoordinate.get()));
+            kingdomBuilder.addClaim(ClaimPosition.newBuilder()
+                    .setOwner(uuid.get())
+                    .setClaimedOn(databaseResult.getLong("claimed_on").orElse(0L))
+                    .setClaimedBy(databaseResult.getUUID("claimed_by").orElse(null))
+                    .setX(xCoordinate.get())
+                    .setZ(zCoordinate.get())
+                    .setWorld(world).build());
         });
     }
 }

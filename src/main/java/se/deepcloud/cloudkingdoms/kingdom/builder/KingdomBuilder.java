@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
-import se.deepcloud.cloudkingdoms.kingdom.chunk.DataChunk;
-import se.deepcloud.cloudkingdoms.kingdom.name.KingdomName;
+import se.deepcloud.cloudkingdoms.kingdom.claim.ClaimPosition;
 import se.deepcloud.cloudkingdoms.kingdom.privilege.KingdomPrivilege;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
@@ -28,7 +27,7 @@ public class KingdomBuilder {
     public long creationTime = System.currentTimeMillis() / 1000;
     public final List<KingdomPlayer> members = new LinkedList<>();
     public final List<KingdomPlayer> bannedPlayers = new LinkedList<>();
-    public final List<Chunk> claims = new LinkedList<>();
+    public final List<ClaimPosition> claims = new LinkedList<>();
     public final Map<KingdomRole, Map<KingdomPrivilege, KingdomPrivilege.Status>> rolePermissions = new LinkedHashMap<>();
     public BigDecimal balance = BigDecimal.ZERO;
 
@@ -90,7 +89,7 @@ public class KingdomBuilder {
         return this;
     }
 
-    public KingdomBuilder addClaim(@NotNull Chunk chunk) {
+    public KingdomBuilder addClaim(@NotNull ClaimPosition chunk) {
         this.claims.add(chunk);
         return this;
     }

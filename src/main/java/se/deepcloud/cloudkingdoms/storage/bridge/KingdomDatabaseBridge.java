@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.kingdom.Kingdom;
+import se.deepcloud.cloudkingdoms.kingdom.claim.ClaimPosition;
 import se.deepcloud.cloudkingdoms.kingdom.privilege.KingdomPrivilege;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
 import se.deepcloud.cloudkingdoms.player.KingdomPlayer;
@@ -36,6 +37,17 @@ public class KingdomDatabaseBridge {
         runOperationIfRunning(kingdom.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("kingdom_members",
                 createFilter("kingdom", kingdom, new Pair<>("player", kingdomPlayer.getUniqueId().toString())),
                 new Pair<>("role", kingdomPlayer.getKingdomRole().getName())
+        ));
+    }
+
+    public static void addClaim(@NotNull Kingdom kingdom, @NotNull ClaimPosition claimPosition) {
+        runOperationIfRunning(kingdom.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("kingdom_claims",
+                new Pair<>("uuid", kingdom.getUniqueId().toString()),
+                new Pair<>("claimed_by", claimPosition.getClaimedBy() == null ? null : claimPosition.getClaimedBy().toString()),
+                new Pair<>("world_name", claimPosition.getWorld().getName()),
+                new Pair<>("chunk_x_pos", claimPosition.getX()),
+                new Pair<>("chunk_z_pos", claimPosition.getZ()),
+                new Pair<>("claimed_on", claimPosition.getClaimedOn())
         ));
     }
 

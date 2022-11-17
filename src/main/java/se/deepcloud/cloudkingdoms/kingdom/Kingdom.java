@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.deepcloud.cloudkingdoms.CloudKingdoms;
 import se.deepcloud.cloudkingdoms.kingdom.builder.KingdomBuilder;
+import se.deepcloud.cloudkingdoms.kingdom.claim.ClaimPosition;
 import se.deepcloud.cloudkingdoms.kingdom.privilege.KingdomPrivilege;
 import se.deepcloud.cloudkingdoms.kingdom.privilege.KingdomPrivileges;
 import se.deepcloud.cloudkingdoms.kingdom.role.KingdomRole;
@@ -22,6 +23,7 @@ import se.deepcloud.cloudkingdoms.scheduler.BukkitExecutor;
 import se.deepcloud.cloudkingdoms.scheduler.Synchronized;
 import se.deepcloud.cloudkingdoms.storage.bridge.DatabaseBridge;
 import se.deepcloud.cloudkingdoms.storage.bridge.DatabaseBridgeMode;
+import se.deepcloud.cloudkingdoms.storage.bridge.KingdomDatabaseBridge;
 import se.deepcloud.cloudkingdoms.storage.sql.SQLDatabaseBridge;
 import se.deepcloud.cloudkingdoms.utilities.formatting.Formatters;
 import se.deepcloud.cloudkingdoms.utilities.logging.Debug;
@@ -49,7 +51,7 @@ public class Kingdom {
     private final Set<KingdomPlayer> bannedPlayers = Sets.newConcurrentHashSet();
     private final Set<KingdomPlayer> coopPlayers = Sets.newConcurrentHashSet();
     private final Set<KingdomPlayer> invitedPlayers = Sets.newConcurrentHashSet();
-    private final Set<Chunk> claims = Sets.newConcurrentHashSet();
+    private final Set<ClaimPosition> claims = Sets.newConcurrentHashSet();
 
     private KingdomPlayer owner;
     private String creationTimeDate;
@@ -116,6 +118,10 @@ public class Kingdom {
         return Collections.unmodifiableList(members);
     }
 
+    public int getKingdomMemberSize() {
+        return getKingdomMembers(true).size();
+    }
+
     public @NotNull List<KingdomPlayer> getBannedPlayers() {
         return new SequentialListBuilder<KingdomPlayer>().build(this.bannedPlayers);
     }
@@ -164,8 +170,9 @@ public class Kingdom {
                 members.remove(originalPlayer);
                 members.add(newPlayer);
             });
-            //TODO: IslandsDatabaseBridge.removeMember(this, originalPlayer);
-            //TODO: IslandsDatabaseBridge.addMember(this, newPlayer, System.currentTimeMillis());
+
+            KingdomDatabaseBridge.removeMember(this, originalPlayer);
+            KingdomDatabaseBridge.addMember(this, newPlayer, System.currentTimeMillis());
         }
 
         replaceBannedPlayer(originalPlayer, newPlayer);
@@ -227,12 +234,26 @@ public class Kingdom {
         return new SequentialListBuilder<KingdomPlayer>().build(this.coopPlayers);
     }
 
-    public Set<Chunk> getClaims() {
+    public Set<ClaimPosition> getClaims() {
         return claims;
     }
 
-    public void claimChunk(@NotNull Chunk chunk) {
+    public int getClaimsSize() {
+        return claims.size();
+    }
 
+    public boolean hasMaxClaims() {
+        return getClaimsSize() >= getClaimBonus() + 5;
+    }
+
+    public void claimChunk(@NotNull KingdomPlayer kingdomPlayer, @NotNull Chunk chunk) {
+        if (plugin.getKingdomManager().isChunkClaimed(chunk))
+            return;
+
+        ClaimPosition claimPosition = plugin.getKingdomManager().setChunkClaimed(chunk, this, kingdomPlayer.getUniqueId());
+        claims.add(claimPosition);
+
+        KingdomDatabaseBridge.addClaim(this, claimPosition);
     }
 
     public @Nullable Location getHomeLocation() {
@@ -257,7 +278,7 @@ public class Kingdom {
         this.kingdomName = kingdomName;
         this.kingdomRawName = ChatColor.stripColor(kingdomName);
 
-        // TODO: Save to Database
+        KingdomDatabaseBridge.saveName(this);
     }
 
     public int getMemberBonus() {
